@@ -1,10 +1,7 @@
 import { sub } from 'date-fns';
 import { exportSuppliers } from './supplier';
 
-// ----------------------------------------------------------------------
-
 const PRODUCT_TITLES = [
-  // Food Products
   'Organic Wheat',
   'Fresh Vegetables Assortment',
   'Dairy Products Bundle',
@@ -12,9 +9,7 @@ const PRODUCT_TITLES = [
   'Fruit Package',
   'Meat Products',
   'Fish and Seafood',
-  'Processed Foods',
-  
-  // Agricultural Products
+  'Processed Foods',  
   'Fertilizers',
   'Seeds Package',
   'Farm Equipment',
@@ -49,11 +44,5 @@ const generateProcurement = (index: number) => {
   };
 };
 
-// Generate 100 procurement records
 export const exportProcurements = Array.from({ length: 100 }, (_, index) => generateProcurement(index));
 
-export type Procurement = typeof exportProcurements[number];
-
-// Helper function to get procurement by supplier ID
-export const getProcurementsBySupplier = (supplierId: string) => 
-  exportProcurements.filter((procurement) => procurement.supplierId === supplierId);

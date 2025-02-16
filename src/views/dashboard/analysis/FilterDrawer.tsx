@@ -18,7 +18,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { exportProcurements } from "src/utils/mock-data/procurement";
 import { fCurrency } from "src/utils/helper";
 import dayjs from "dayjs";
-import { Procurement } from "src/utils/mock-data/procurement";
 
 type FilterDrawerProps = {
   open: boolean;
@@ -166,7 +165,7 @@ const FilterDrawer = ({
         </FormControl>
 
         <Box>
-          <Typography variant="subtitle1" gutterBottom>
+          <Typography gutterBottom>
             Date Range
           </Typography>
           <LocalizationProvider dateAdapter={AdapterDateFns}>

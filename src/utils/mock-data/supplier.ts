@@ -6,8 +6,6 @@ import { email } from './email';
 import { phoneNumber } from './phoneNumber';
 import { rating } from './number';
 
-// ----------------------------------------------------------------------
-
 const generateSupplier = (index: number) => ({
   id: `e99f09a7-dd88-49d5-b1c8-1daf80c2d7b${index + 1}`,
   companyName: company[index],
@@ -24,7 +22,6 @@ const generateSupplier = (index: number) => ({
   rating: rating[index]
 });
 
-// Generate 40 suppliers (based on the length of our smallest mock data array)
 export const exportSuppliers = Array.from({ length: 40 }, (_, index) => generateSupplier(index));
 
 export type Supplier = typeof exportSuppliers[number];

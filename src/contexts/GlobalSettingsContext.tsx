@@ -7,8 +7,8 @@ type GlobalSettingsProps = {
 };
 
 export const GlobalSettingsProvider = ({ children }: GlobalSettingsProps) => {
-  const [upperThreshold, setUpperThreshold] = useState<number>(1000);
-  const [lowerThreshold, setLowerThreshold] = useState<number>(10);
+  const [upperThreshold, setUpperThreshold] = useState<number>(100000);
+  const [lowerThreshold, setLowerThreshold] = useState<number>(10000);
 
   return (
     <GlobalSettingsContext.Provider

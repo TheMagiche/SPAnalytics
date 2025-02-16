@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Button,
   Checkbox,
   Container,
@@ -20,6 +19,8 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import DashboardLayout from "src/layouts/dashboard";
 import useSettings from "src/hooks/useSettings";
@@ -34,7 +35,11 @@ import Label from "src/components/Label";
 import { useSupplier } from "src/hooks/useSupplier";
 import { sentenceCase } from "change-case";
 import SearchNotFound from "src/components/SearchNotFound";
-// ----------------------------------------------------------------------
+import SupplierMenu from "src/views/dashboard/app/supplier/SupplierMenu";
+import { useSnackbar } from "notistack";
+import SupplierDetail from "src/views/dashboard/app/supplier/SupplierDetails";
+import { Search } from "@mui/icons-material";
+
 
 const TABLE_HEAD = [
   { id: "companyName", label: "Company", alignRight: false },
@@ -46,7 +51,7 @@ const TABLE_HEAD = [
 ];
 
 // Replace REGIONS constant with COUNTRIES
-const STATUS_OPTIONS = ['active', 'inactive'];
+const STATUS_OPTIONS = ["active", "inactive"];
 
 // ----------------------------------------------------------------------
 
@@ -58,9 +63,13 @@ export default function Suppliers() {
   const [selected, setSelected] = useState<string[]>([]);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [filterName, setFilterName] = useState<string>("");
-  const [filterCountry, setFilterCountry] = useState<string>('all');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [filterCountry, setFilterCountry] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [selectedSupplier, setSelectedSupplier] = useState<any>(null);
+  const [openDetails, setOpenDetails] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const handleClick = (name: string) => {
     const selectedIndex = selected.indexOf(name);
@@ -90,24 +99,42 @@ export default function Suppliers() {
   const COUNTRIES: string[] = Array.from(
     new Set(suppliers.map((sup: any) => sup.country))
   ).sort() as unknown as string[];
-  
+
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - suppliers.length) : 0;
 
   const isUserNotFound = suppliers.length === 0;
 
-  // Update the filtering logic
   const filteredSuppliers = suppliers
     .filter((supplier: any) => {
-      if (filterCountry !== 'all' && supplier.country !== filterCountry) return false;
-      if (filterStatus !== 'all' && supplier.status !== filterStatus) return false;
-      return true;
+      if (filterCountry !== "all" && supplier.country !== filterCountry)
+        return false;
+      if (filterStatus !== "all" && supplier.status !== filterStatus)
+        return false;
+      const matchesSearch = searchQuery
+        ? supplier.companyName.toLowerCase().includes(searchQuery.toLowerCase())
+        : true;
+      return matchesSearch;
     })
     .sort((a: any, b: any) => {
-      return sortOrder === 'desc' 
-        ? b.rating - a.rating 
-        : a.rating - b.rating;
+      return sortOrder === "desc" ? b.rating - a.rating : a.rating - b.rating;
     });
+
+  const handleOpenDetails = (supplier: any) => {
+    setSelectedSupplier(supplier);
+    setOpenDetails(true);
+  };
+
+  const handleCloseDetails = () => {
+    setOpenDetails(false);
+    setSelectedSupplier(null);
+  };
+
+  const handleDeleteSupplier = (supplier: any) => {
+    enqueueSnackbar(`Supplier ${supplier.companyName} deleted successfully`, {
+      variant: "success",
+    });
+  };
 
   return (
     <DashboardLayout>
@@ -130,15 +157,35 @@ export default function Suppliers() {
               </Button>
             }
           />
-          
-          {/* Update the Region filter to Country filter */}
-          <Box sx={{ mb: 3, display: 'flex', gap: 2 }}>
+
+          <Stack 
+            direction="row" 
+            alignItems="center" 
+            justifyContent="space-between"
+            sx={{ mb: 3 }}
+          >
+            <TextField
+              size="small"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by company name..."
+              sx={{ width: 300 }}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">
+                  <Search/>
+                </InputAdornment>,
+              }}
+            />
+
+          <Box sx={{ mb: 3, mt: 2, display: "flex", gap: 2 }}>
             <FormControl sx={{ minWidth: 120 }}>
               <InputLabel>Country</InputLabel>
               <Select
                 value={filterCountry}
                 label="Country"
-                onChange={(e: SelectChangeEvent) => setFilterCountry(e.target.value)}
+                onChange={(e: SelectChangeEvent) =>
+                  setFilterCountry(e.target.value)
+                }
               >
                 <MenuItem value="all">All Countries</MenuItem>
                 {COUNTRIES.map((country) => (
@@ -154,7 +201,9 @@ export default function Suppliers() {
               <Select
                 value={filterStatus}
                 label="Status"
-                onChange={(e: SelectChangeEvent) => setFilterStatus(e.target.value)}
+                onChange={(e: SelectChangeEvent) =>
+                  setFilterStatus(e.target.value)
+                }
               >
                 <MenuItem value="all">All</MenuItem>
                 {STATUS_OPTIONS.map((status) => (
@@ -170,13 +219,16 @@ export default function Suppliers() {
               <Select
                 value={sortOrder}
                 label="Rating"
-                onChange={(e: SelectChangeEvent) => setSortOrder(e.target.value as 'asc' | 'desc')}
+                onChange={(e: SelectChangeEvent) =>
+                  setSortOrder(e.target.value as "asc" | "desc")
+                }
               >
                 <MenuItem value="desc">Highest First</MenuItem>
                 <MenuItem value="asc">Lowest First</MenuItem>
               </Select>
             </FormControl>
           </Box>
+          </Stack>
         </Container>
 
         <Container maxWidth={themeStretch ? false : "xl"}>
@@ -295,7 +347,11 @@ export default function Suppliers() {
                               </Label>
                             </TableCell>
                             <TableCell align="right">
-                              {/* <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} /> */}
+                              <SupplierMenu
+                                onDelete={() => handleDeleteSupplier(row)}
+                                onOpen={() => handleOpenDetails(row)}
+                                supplier={row}
+                              />
                             </TableCell>
                           </TableRow>
                         );
@@ -331,6 +387,11 @@ export default function Suppliers() {
           />
         </Container>
       </Page>
+      <SupplierDetail
+        openModal={openDetails}
+        handleClose={handleCloseDetails}
+        supplier={selectedSupplier}
+      />
     </DashboardLayout>
   );
 }

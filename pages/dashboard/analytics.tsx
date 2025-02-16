@@ -13,6 +13,8 @@ import {
   useTheme,
   TableHead,
   NoSsr,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import DashboardLayout from "src/layouts/dashboard";
 import useSettings from "src/hooks/useSettings";
@@ -30,14 +32,17 @@ import { exportProcurements } from "src/utils/mock-data/procurement";
 import { fDate, fCurrency } from "src/utils/helper";
 import FilterDrawer from "src/views/dashboard/analysis/FilterDrawer";
 import filterFill from "@iconify/icons-eva/funnel-fill";
+import ProcurementMenu from "src/views/dashboard/analysis/ProcurementMenu";
+import ProcurementDetails from "src/views/dashboard/analysis/ProcurementDetails";
+import { Search } from "@mui/icons-material";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: "id", label: "ID", alignRight: false },
   { id: "title", label: "Product", alignRight: false },
   { id: "date", label: "Date", alignRight: false },
   { id: "region", label: "Region", alignRight: false },
-  { id: "subRegion", label: "Area Type", alignRight: false },
   { id: "amountSpent", label: "Amount", alignRight: true },
   {
     id: "environmentalImpact",
@@ -63,6 +68,9 @@ export default function Analytics() {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [openFilter, setOpenFilter] = useState(false);
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [selectedProcurement, setSelectedProcurement] = useState<any>(null);
+  const [openDetails, setOpenDetails] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const handleClick = (name: string) => {
     const selectedIndex = selected.indexOf(name);
@@ -89,7 +97,6 @@ export default function Analytics() {
     setPage(0);
   };
 
-  // Update filtered procurements to include date range and status
   const filteredProcurements = exportProcurements.filter((procurement) => {
     const matchesRegion =
       filterRegion === "all" ? true : procurement.region === filterRegion;
@@ -100,6 +107,9 @@ export default function Analytics() {
       procurement.amountSpent <= amountRange[1];
     const matchesStatus =
       filterStatus === "all" ? true : procurement.status === filterStatus;
+    const matchesSearch = searchQuery 
+      ? procurement.id.toLowerCase().includes(searchQuery.toLowerCase())
+      : true;
 
     const procurementDate = new Date(procurement.date);
     const matchesStartDate = startDate ? procurementDate >= startDate : true;
@@ -111,7 +121,8 @@ export default function Analytics() {
       matchesAmount &&
       matchesStartDate &&
       matchesEndDate &&
-      matchesStatus
+      matchesStatus &&
+      matchesSearch
     );
   });
 
@@ -121,6 +132,25 @@ export default function Analytics() {
       : 0;
 
   const isDataNotFound = filteredProcurements.length === 0;
+
+  const handleOpenDetails = (procurement: any) => {
+    setSelectedProcurement(procurement);
+    setOpenDetails(true);
+  };
+
+  const handleCloseDetails = () => {
+    setOpenDetails(false);
+    setSelectedProcurement(null);
+  };
+
+  const handleDeleteProcurement = (procurement: any) => {
+    // Here you would typically make an API call to delete the procurement
+    const updatedProcurements = filteredProcurements.filter(
+      (p) => p.id !== procurement.id
+    );
+    // Update your data source accordingly
+    console.log('Delete procurement:', procurement.id);
+  };
 
   return (
     <DashboardLayout>
@@ -172,10 +202,36 @@ export default function Analytics() {
           setPage={setPage}
         />
         <Container maxWidth={themeStretch ? false : "xl"}>
+          <Stack 
+            direction="row" 
+            alignItems="center" 
+            justifyContent="space-between"
+            sx={{ mb: 3 }}
+          >
+            <TextField
+              size="small"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by ID..."
+              sx={{ width: 300 }}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">
+                  <Search/>
+                </InputAdornment>,
+              }}
+            />
+          </Stack>
+
           <Scrollbar>
             <NoSsr>
-              <TableContainer sx={{ minWidth: 800 }}>
-                <Table>
+              <TableContainer 
+                sx={{ 
+                  minWidth: 1300,
+                  maxHeight: 'calc(100vh - 300px)',
+                  overflow: 'auto'
+                }}
+              >
+                <Table stickyHeader>
                   <TableHead>
                     <TableRow>
                       <TableCell padding="checkbox">
@@ -244,18 +300,18 @@ export default function Analytics() {
                                 onClick={() => handleClick(id)}
                               />
                             </TableCell>
-                            <TableCell
-                              component="th"
-                              scope="row"
-                              padding="none"
-                            >
+                            <TableCell align="left">
+                              <Typography variant="subtitle2" noWrap>
+                                {id}
+                              </Typography>
+                            </TableCell>
+                            <TableCell component="th" scope="row" padding="none">
                               <Typography variant="subtitle2" noWrap>
                                 {title}
                               </Typography>
                             </TableCell>
                             <TableCell align="left">{fDate(date)}</TableCell>
                             <TableCell align="left">{region}</TableCell>
-                            <TableCell align="left">{subRegion}</TableCell>
                             <TableCell align="right">
                               {fCurrency(amountSpent)}
                             </TableCell>
@@ -289,6 +345,13 @@ export default function Analytics() {
                               >
                                 {sentenceCase(status)}
                               </Label>
+                            </TableCell>
+                            <TableCell align="right">
+                              <ProcurementMenu
+                                procurement={row}
+                                onDelete={handleDeleteProcurement}
+                                onOpen={handleOpenDetails}
+                              />
                             </TableCell>
                           </TableRow>
                         );
@@ -324,6 +387,12 @@ export default function Analytics() {
           />
         </Container>
       </Page>
+
+      <ProcurementDetails
+        openModal={openDetails}
+        handleClose={handleCloseDetails}
+        procurement={selectedProcurement}
+      />
     </DashboardLayout>
   );
 }
