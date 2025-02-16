@@ -278,7 +278,6 @@ export default function Analytics() {
                           title,
                           date,
                           region,
-                          subRegion,
                           amountSpent,
                           environmentalImpact,
                           status,

@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { exportProcurements } from "src/utils/mock-data/procurement";
 import { fCurrency } from "src/utils/helper";
@@ -165,31 +166,51 @@ const FilterDrawer = ({
         </FormControl>
 
         <Box>
-          <Typography gutterBottom>
-            Date Range
-          </Typography>
+          <Typography gutterBottom>Date Range</Typography>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <Stack spacing={2}>
-              <DatePicker
-                label="Start Date"
-                value={dayjs(startDate)}
-                onChange={(newValue) => {
-                  setStartDate(newValue ? new Date(newValue.toDate()) : null);
-                  setPage(0);
-                }}
-                selectedSections={undefined}
-                onSelectedSectionsChange={undefined}
-              />
-              <DatePicker
-                label="End Date"
-                value={dayjs(endDate)}
-                onChange={(newValue) => {
-                  setEndDate(newValue ? new Date(newValue.toDate()) : null);
-                  setPage(0);
-                }}
-                selectedSections={undefined}
-                onSelectedSectionsChange={undefined}
-              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Start Date"
+                  value={dayjs(startDate)}
+                  onChange={(newValue: any) => {
+                    setStartDate(new Date(newValue));
+                    setPage(0);
+                  }}
+                  selectedSections={undefined}
+                  onSelectedSectionsChange={undefined}
+                  //@ts-ignore
+                  slotProps={{
+                    textField: {
+                      error: false
+                    },
+                    field: {
+                      clearable: true
+                    }
+                  }}
+                />
+              </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="End Date"
+                  value={dayjs(endDate)}
+                  onChange={(newValue: any) => {
+                    setEndDate(new Date(newValue.toDate()));
+                    setPage(0);
+                  }}
+                  selectedSections={undefined}
+                  onSelectedSectionsChange={undefined}
+                  //@ts-ignore
+                  slotProps={{
+                    textField: {
+                      error: false
+                    },
+                    field: {
+                      clearable: true
+                    }
+                  }}
+                />
+              </LocalizationProvider>
             </Stack>
           </LocalizationProvider>
         </Box>
