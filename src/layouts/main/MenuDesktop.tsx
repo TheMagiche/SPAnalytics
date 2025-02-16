@@ -107,125 +107,122 @@ function MenuDesktopItem({
   const isActive = pathname === path;
 
   if (children) {
-    return (
-      <>
-        <LinkStyle
-          onClick={onOpen}
-          sx={{
-            display: 'flex',
-            cursor: 'pointer',
-            alignItems: 'center',
-            ...(isHome && { color: 'common.white' }),
-            ...(isOffset && { color: 'text.primary' }),
-            ...(isOpen && { opacity: 0.48 }),
-          }}
-        >
-          {title}
-          <Box
-            component={Icon}
-            icon={isOpen ? arrowIosUpwardFill : arrowIosDownwardFill}
-            sx={{ ml: 0.5, width: 16, height: 16 }}
-          />
-        </LinkStyle>
+    return (<>
+      <LinkStyle
+        onClick={onOpen}
+        sx={{
+          display: 'flex',
+          cursor: 'pointer',
+          alignItems: 'center',
+          ...(isHome && { color: 'common.white' }),
+          ...(isOffset && { color: 'text.primary' }),
+          ...(isOpen && { opacity: 0.48 }),
+        }}
+      >
+        {title}
+        <Box
+          component={Icon}
+          icon={isOpen ? arrowIosUpwardFill : arrowIosDownwardFill}
+          sx={{ ml: 0.5, width: 16, height: 16 }}
+        />
+      </LinkStyle>
+      <Popover
+        open={isOpen}
+        anchorReference='anchorPosition'
+        anchorPosition={{ top: 80, left: 0 }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+        onClose={onClose}
+        PaperProps={{
+          sx: {
+            px: 3,
+            pt: 5,
+            pb: 3,
+            right: 16,
+            m: 'auto',
+            borderRadius: 2,
+            maxWidth: (theme) => theme.breakpoints.values.lg,
+            boxShadow: (theme) => theme.customShadows.z24,
+          },
+        }}
+      >
+        <Grid container spacing={3}>
+          {children.map((list) => {
+            const { subheader, items } = list;
 
-        <Popover
-          open={isOpen}
-          anchorReference='anchorPosition'
-          anchorPosition={{ top: 80, left: 0 }}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-          onClose={onClose}
-          PaperProps={{
-            sx: {
-              px: 3,
-              pt: 5,
-              pb: 3,
-              right: 16,
-              m: 'auto',
-              borderRadius: 2,
-              maxWidth: (theme) => theme.breakpoints.values.lg,
-              boxShadow: (theme) => theme.customShadows.z24,
-            },
-          }}
-        >
-          <Grid container spacing={3}>
-            {children.map((list) => {
-              const { subheader, items } = list;
+            return (
+              (<Grid
+                key={subheader}
+                item
+                xs={12}
+                md={subheader === 'Dashboard' ? 6 : 2}
+              >
+                <List disablePadding>
+                  <ListSubheader
+                    disableSticky
+                    disableGutters
+                    sx={{
+                      display: 'flex',
+                      lineHeight: 'unset',
+                      alignItems: 'center',
+                      color: 'text.primary',
+                      typography: 'overline',
+                    }}
+                  >
+                    <IconBullet type='subheader' /> {subheader}
+                  </ListSubheader>
 
-              return (
-                <Grid
-                  key={subheader}
-                  item
-                  xs={12}
-                  md={subheader === 'Dashboard' ? 6 : 2}
-                >
-                  <List disablePadding>
-                    <ListSubheader
-                      disableSticky
-                      disableGutters
-                      sx={{
-                        display: 'flex',
-                        lineHeight: 'unset',
-                        alignItems: 'center',
-                        color: 'text.primary',
-                        typography: 'overline',
-                      }}
-                    >
-                      <IconBullet type='subheader' /> {subheader}
-                    </ListSubheader>
-
-                    {items.map((item) => (
-                      <NextLink key={item.title} href={item.path}>
-                        <ListItemStyle
-                          sx={{
-                            ...(item.path === pathname && {
-                              typography: 'subtitle2',
-                              color: 'text.primary',
-                            }),
-                          }}
-                        >
-                          {item.title === 'Dashboard' ? (
-                            <CardActionArea
-                              sx={{
-                                py: 5,
-                                px: 10,
-                                borderRadius: 2,
-                                color: 'primary.main',
-                                bgcolor: 'background.neutral',
+                  {items.map((item) => (
+                    <NextLink key={item.title} href={item.path} legacyBehavior>
+                      <ListItemStyle
+                        sx={{
+                          ...(item.path === pathname && {
+                            typography: 'subtitle2',
+                            color: 'text.primary',
+                          }),
+                        }}
+                      >
+                        {item.title === 'Dashboard' ? (
+                          <CardActionArea
+                            sx={{
+                              py: 5,
+                              px: 10,
+                              borderRadius: 2,
+                              color: 'primary.main',
+                              bgcolor: 'background.neutral',
+                            }}
+                          >
+                            <Box
+                              component={motion.img}
+                              whileTap='tap'
+                              whileHover='hover'
+                              variants={{
+                                hover: { scale: 1.02 },
+                                tap: { scale: 0.98 },
                               }}
-                            >
-                              <Box
-                                component={motion.img}
-                                whileTap='tap'
-                                whileHover='hover'
-                                variants={{
-                                  hover: { scale: 1.02 },
-                                  tap: { scale: 0.98 },
-                                }}
-                                src='/static/illustrations/illustration_dashboard.png'
-                              />
-                            </CardActionArea>
-                          ) : (
-                            <>
-                              <IconBullet />
-                              {item.title}
-                            </>
-                          )}
-                        </ListItemStyle>
-                      </NextLink>
-                    ))}
-                  </List>
-                </Grid>
-              );
-            })}
-          </Grid>
-        </Popover>
-      </>
-    );
+                              src='/static/illustrations/illustration_dashboard.png'
+                            />
+                          </CardActionArea>
+                        ) : (
+                          <>
+                            <IconBullet />
+                            {item.title}
+                          </>
+                        )}
+                      </ListItemStyle>
+                    </NextLink>
+                  ))}
+                </List>
+              </Grid>)
+            );
+          })}
+        </Grid>
+      </Popover>
+    </>);
   }
 
   return (
-    <NextLink key={title} href={path} passHref>
+    (<NextLink key={title} href={path} passHref legacyBehavior>
       <LinkStyle
         sx={{
           ...(isHome && { color: 'common.white' }),
@@ -235,7 +232,7 @@ function MenuDesktopItem({
       >
         {title}
       </LinkStyle>
-    </NextLink>
+    </NextLink>)
   );
 }
 

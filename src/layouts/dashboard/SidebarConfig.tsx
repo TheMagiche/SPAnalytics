@@ -23,21 +23,21 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: "general",
+    subheader: "General",
     items: [
       {
-        title: "One",
-        path: PATH_DASHBOARD.general.pageOne,
+        title: "Dashboard",
+        path: PATH_DASHBOARD.general.dashboard,
         icon: ICONS.dashboard,
       },
+      // {
+      //   title: "Expenses & Revenue",
+      //   path: PATH_DASHBOARD.general.revenue,
+      //   icon: ICONS.ecommerce,
+      // },
       {
-        title: "Two",
-        path: PATH_DASHBOARD.general.pageTwo,
-        icon: ICONS.ecommerce,
-      },
-      {
-        title: "Three",
-        path: PATH_DASHBOARD.general.pageThree,
+        title: "Procurement Analysis",
+        path: PATH_DASHBOARD.general.analytics,
         icon: ICONS.analytics,
       },
     ],
@@ -46,16 +46,16 @@ const sidebarConfig = [
   // MANAGEMENT
   // ----------------------------------------------------------------------
   {
-    subheader: "management",
+    subheader: "Management",
     items: [
       {
-        title: "user",
+        title: "Administration",
         path: PATH_DASHBOARD.app.root,
         icon: ICONS.user,
         children: [
-          { title: "Four", path: PATH_DASHBOARD.app.pageFour },
-          { title: "Five", path: PATH_DASHBOARD.app.pageFive },
-          { title: "Six", path: PATH_DASHBOARD.app.pageSix },
+          { title: "Suppliers", path: PATH_DASHBOARD.app.suppliers },
+          { title: "Global Settings", path: PATH_DASHBOARD.app.settings },
+          { title: "Documentation", path: PATH_DASHBOARD.app.documentation },
         ],
       },
     ],

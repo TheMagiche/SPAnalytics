@@ -32,7 +32,7 @@ type TLink = {
 function LinkItem({ link }: { link: TLink }) {
   const { href, name, icon } = link;
   return (
-    <NextLink key={name} href={href || '#'} passHref>
+    (<NextLink key={name} href={href || '#'} passHref legacyBehavior>
       <Link
         variant='body2'
         sx={{
@@ -55,7 +55,7 @@ function LinkItem({ link }: { link: TLink }) {
         )}
         {name}
       </Link>
-    </NextLink>
+    </NextLink>)
   );
 }
 

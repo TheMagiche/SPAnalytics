@@ -136,7 +136,7 @@ function MenuMobileItem({
   }
 
   return (
-    <NextLink key={title} href={path}>
+    (<NextLink key={title} href={path} legacyBehavior>
       <ListItemStyle
         sx={{
           ...(isActive && {
@@ -153,7 +153,7 @@ function MenuMobileItem({
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText disableTypography primary={title} />
       </ListItemStyle>
-    </NextLink>
+    </NextLink>)
   );
 }
 
@@ -181,45 +181,42 @@ export default function MenuMobile({ isOffset, isHome, navConfig }: MenuProps) {
     setDrawerOpen(false);
   };
 
-  return (
-    <>
-      <MIconButton
-        onClick={handleDrawerOpen}
-        sx={{
-          ml: 1,
-          ...(isHome && { color: 'common.white' }),
-          ...(isOffset && { color: 'text.primary' }),
-        }}
-      >
-        <Icon icon={menu2Fill} />
-      </MIconButton>
+  return (<>
+    <MIconButton
+      onClick={handleDrawerOpen}
+      sx={{
+        ml: 1,
+        ...(isHome && { color: 'common.white' }),
+        ...(isOffset && { color: 'text.primary' }),
+      }}
+    >
+      <Icon icon={menu2Fill} />
+    </MIconButton>
+    <Drawer
+      open={drawerOpen}
+      onClose={handleDrawerClose}
+      ModalProps={{ keepMounted: true }}
+      PaperProps={{ sx: { pb: 5, width: 260 } }}
+    >
+      <Scrollbar>
+        <Box sx={{ display: 'inline-flex' }}>
+          <NextLink href='/' legacyBehavior>
+            <Logo sx={{ mx: PADDING, my: 3 }} />
+          </NextLink>
+        </Box>
 
-      <Drawer
-        open={drawerOpen}
-        onClose={handleDrawerClose}
-        ModalProps={{ keepMounted: true }}
-        PaperProps={{ sx: { pb: 5, width: 260 } }}
-      >
-        <Scrollbar>
-          <Box sx={{ display: 'inline-flex' }}>
-            <NextLink href='/'>
-              <Logo sx={{ mx: PADDING, my: 3 }} />
-            </NextLink>
-          </Box>
-
-          <List disablePadding>
-            {navConfig.map((link) => (
-              <MenuMobileItem
-                key={link.title}
-                item={link}
-                isOpen={open}
-                onOpen={handleOpen}
-                isActive={pathname === link.path}
-              />
-            ))}
-          </List>
-        </Scrollbar>
-      </Drawer>
-    </>
-  );
+        <List disablePadding>
+          {navConfig.map((link) => (
+            <MenuMobileItem
+              key={link.title}
+              item={link}
+              isOpen={open}
+              onOpen={handleOpen}
+              isActive={pathname === link.path}
+            />
+          ))}
+        </List>
+      </Scrollbar>
+    </Drawer>
+  </>);
 }

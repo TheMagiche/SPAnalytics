@@ -27,14 +27,12 @@ type LogoOnlyLayoutProps = {
 };
 
 export default function LogoOnlyLayout({ children }: LogoOnlyLayoutProps) {
-  return (
-    <>
-      <HeaderStyle>
-        <NextLink href='/'>
-          <Logo />
-        </NextLink>
-      </HeaderStyle>
-      {children}
-    </>
-  );
+  return (<>
+    <HeaderStyle>
+      <NextLink href='/' legacyBehavior>
+        <Logo />
+      </NextLink>
+    </HeaderStyle>
+    {children}
+  </>);
 }

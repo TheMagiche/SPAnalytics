@@ -1,4 +1,4 @@
-import { useState, ReactNode } from 'react';
+import React, { useState, ReactNode } from 'react';
 import { Icon } from '@iconify/react';
 import arrowIosForwardFill from '@iconify/icons-eva/arrow-ios-forward-fill';
 import arrowIosDownwardFill from '@iconify/icons-eva/arrow-ios-downward-fill';
@@ -21,7 +21,7 @@ import {
 
 // ----------------------------------------------------------------------
 
-const ListSubheaderStyle = styled((props) => (
+const ListSubheaderStyle = styled((props : any) => (
   <ListSubheader disableSticky disableGutters {...props} />
 ))(({ theme }) => ({
   ...theme.typography.overline,
@@ -30,7 +30,7 @@ const ListSubheaderStyle = styled((props) => (
   paddingLeft: theme.spacing(5),
   color: theme.palette.text.primary,
 }));
-
+//@ts-ignore
 interface ListItemStyleProps extends ListItemButtonProps {
   component?: ReactNode;
   to?: string;
@@ -73,8 +73,8 @@ const ListItemIconStyle = styled(ListItemIcon)({
 type NavItemProps = {
   title: string;
   path: string;
-  icon?: JSX.Element;
-  info?: JSX.Element;
+  icon?: React.JSX.Element;
+  info?: React.JSX.Element;
   children?: {
     title: string;
     path: string;
@@ -115,77 +115,74 @@ function NavItem({
   };
 
   if (children) {
-    return (
-      <>
-        <ListItemStyle
-          onClick={handleOpen}
-          sx={{
-            ...(isActiveRoot && activeRootStyle),
-          }}
-        >
-          <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
-
-          {isShow && (
-            <>
-              <ListItemText disableTypography primary={title} />
-              {info && info}
-              <Box
-                component={Icon}
-                icon={open ? arrowIosDownwardFill : arrowIosForwardFill}
-                sx={{ width: 16, height: 16, ml: 1 }}
-              />
-            </>
-          )}
-        </ListItemStyle>
+    return (<>
+      <ListItemStyle
+        onClick={handleOpen}
+        sx={{
+          ...(isActiveRoot && activeRootStyle),
+        }}
+      >
+        <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
 
         {isShow && (
-          <Collapse in={open} timeout='auto' unmountOnExit>
-            <List component='div' disablePadding>
-              {children.map((item) => {
-                const { title, path } = item;
-                const isActiveSub = pathname.includes(path);
-
-                return (
-                  <NextLink key={title} href={path}>
-                    <ListItemStyle
-                      sx={{
-                        ...(isActiveSub && activeSubStyle),
-                      }}
-                    >
-                      <ListItemIconStyle>
-                        <Box
-                          component='span'
-                          sx={{
-                            width: 4,
-                            height: 4,
-                            display: 'flex',
-                            borderRadius: '50%',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            bgcolor: 'text.disabled',
-                            transition: (theme) =>
-                              theme.transitions.create('transform'),
-                            ...(isActiveSub && {
-                              transform: 'scale(2)',
-                              bgcolor: 'primary.main',
-                            }),
-                          }}
-                        />
-                      </ListItemIconStyle>
-                      <ListItemText disableTypography primary={title} />
-                    </ListItemStyle>
-                  </NextLink>
-                );
-              })}
-            </List>
-          </Collapse>
+          <>
+            <ListItemText disableTypography primary={title} />
+            {info && info}
+            <Box
+              component={Icon}
+              icon={open ? arrowIosDownwardFill : arrowIosForwardFill}
+              sx={{ width: 16, height: 16, ml: 1 }}
+            />
+          </>
         )}
-      </>
-    );
+      </ListItemStyle>
+      {isShow && (
+        <Collapse in={open} timeout='auto' unmountOnExit>
+          <List component='div' disablePadding>
+            {children.map((item) => {
+              const { title, path } = item;
+              const isActiveSub = pathname.includes(path);
+
+              return (
+                (<NextLink key={title} href={path} legacyBehavior>
+                  <ListItemStyle
+                    sx={{
+                      ...(isActiveSub && activeSubStyle),
+                    }}
+                  >
+                    <ListItemIconStyle>
+                      <Box
+                        component='span'
+                        sx={{
+                          width: 4,
+                          height: 4,
+                          display: 'flex',
+                          borderRadius: '50%',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          bgcolor: 'text.disabled',
+                          transition: (theme) =>
+                            theme.transitions.create('transform'),
+                          ...(isActiveSub && {
+                            transform: 'scale(2)',
+                            bgcolor: 'primary.main',
+                          }),
+                        }}
+                      />
+                    </ListItemIconStyle>
+                    <ListItemText disableTypography primary={title} />
+                  </ListItemStyle>
+                </NextLink>)
+              );
+            })}
+          </List>
+        </Collapse>
+      )}
+    </>);
   }
 
   return (
-    <NextLink href={path}>
+    (<NextLink href={path} legacyBehavior>
       <ListItemStyle
         sx={{
           ...(isActiveRoot && activeRootStyle),
@@ -199,7 +196,7 @@ function NavItem({
           </>
         )}
       </ListItemStyle>
-    </NextLink>
+    </NextLink>)
   );
 }
 

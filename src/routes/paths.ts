@@ -11,14 +11,14 @@ const ROOTS_DASHBOARD = "/dashboard";
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   general: {
-    pageOne: path(ROOTS_DASHBOARD, "/one"),
-    pageTwo: path(ROOTS_DASHBOARD, "/two"),
-    pageThree: path(ROOTS_DASHBOARD, "/three"),
+    dashboard: path(ROOTS_DASHBOARD, "/dashboard"),
+    revenue: path(ROOTS_DASHBOARD, "/revenue"),
+    analytics: path(ROOTS_DASHBOARD, "/analytics"),
   },
   app: {
     root: path(ROOTS_DASHBOARD, "/app"),
-    pageFour: path(ROOTS_DASHBOARD, "/app/four"),
-    pageFive: path(ROOTS_DASHBOARD, "/app/five"),
-    pageSix: path(ROOTS_DASHBOARD, "/app/six"),
+    suppliers: path(ROOTS_DASHBOARD, "/app/suppliers"),
+    settings: path(ROOTS_DASHBOARD, "/app/settings"),
+    documentation: path(ROOTS_DASHBOARD, "/app/documentation"),
   },
 };

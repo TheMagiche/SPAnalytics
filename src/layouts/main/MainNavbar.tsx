@@ -3,7 +3,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 // material
 import { styled } from '@mui/material/styles';
-import { Box, Button, AppBar, Toolbar, Container } from '@mui/material';
+import { Box, AppBar, Toolbar, Container } from '@mui/material';
 // hooks
 import useOffSetTop from '../../hooks/useOffSetTop';
 // components
@@ -49,7 +49,7 @@ const ToolbarShadowStyle = styled('div')(({ theme }) => ({
 export type MenuItemProps = {
   title: string;
   path: string;
-  icon?: JSX.Element;
+  icon?: React.JSX.Element;
   children?: {
     subheader: string;
     items: {
@@ -71,7 +71,7 @@ export default function MainNavbar() {
   const isHome = pathname === '/';
 
   return (
-    <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent' }}>
+    (<AppBar sx={{ boxShadow: 0, bgcolor: 'transparent' }}>
       <ToolbarStyle
         disableGutters
         sx={{
@@ -89,11 +89,11 @@ export default function MainNavbar() {
             justifyContent: 'space-between',
           }}
         >
-          <NextLink href='/'>
+          <NextLink href='/' legacyBehavior>
             <Logo />
           </NextLink>
-          <Label color='info' sx={{ ml: 1 }}>
-            Next Ts v2.6.0
+          <Label color='warning' sx={{ ml: 1 }}>
+            SPAnalytics
           </Label>
           <Box sx={{ flexGrow: 1 }} />
 
@@ -105,14 +105,6 @@ export default function MainNavbar() {
             />
           </MHidden>
 
-          <Button
-            variant='contained'
-            target='_blank'
-            href='https://material-ui.com/store/items/minimal-dashboard/'
-          >
-            Purchase Now
-          </Button>
-
           <MHidden width='mdUp'>
             <MenuMobile
               isOffset={isOffset}
@@ -122,8 +114,7 @@ export default function MainNavbar() {
           </MHidden>
         </Container>
       </ToolbarStyle>
-
       {isOffset && <ToolbarShadowStyle />}
-    </AppBar>
+    </AppBar>)
   );
 }

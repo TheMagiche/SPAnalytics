@@ -144,7 +144,7 @@ export default function DashboardSidebar({
           alignItems='center'
           justifyContent='space-between'
         >
-          <NextLink href='/'>
+          <NextLink href='/' legacyBehavior>
             <Box sx={{ display: 'inline-flex' }}>
               <Logo />
             </Box>
@@ -167,7 +167,7 @@ export default function DashboardSidebar({
             sx={{ mx: 'auto', mb: 2 }}
           />
         ) : (
-          <NextLink href='#'>
+          <NextLink href='#' legacyBehavior>
             <AccountStyle>
               <Avatar
                 alt='My Avatar'
@@ -175,10 +175,10 @@ export default function DashboardSidebar({
               />
               <Box sx={{ ml: 2 }}>
                 <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
-                  displayName
+                  Admin
                 </Typography>
                 <Typography variant='body2' sx={{ color: 'text.secondary' }}>
-                  role
+                  Manager
                 </Typography>
               </Box>
             </AccountStyle>

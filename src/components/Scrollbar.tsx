@@ -11,7 +11,7 @@ const RootStyle = styled('div')(({ theme }) => ({
   overflow: 'hidden',
 }));
 
-const SimpleBarStyle = styled(SimpleBarReact)(({ theme }) => ({
+const SimpleBarStyle: any = styled(SimpleBarReact)(({ theme }) => ({
   maxHeight: '100%',
   '& .simplebar-scrollbar': {
     '&:before': {

@@ -25,7 +25,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function PageNotFound() {
   return (
-    <LogoOnlyLayout>
+    (<LogoOnlyLayout>
       <RootStyle title='404 Page Not Found | Minimal-UI'>
         <Container>
           <MotionContainer initial='initial' open>
@@ -46,7 +46,7 @@ export default function PageNotFound() {
                 />
               </motion.div>
 
-              <NextLink href='/'>
+              <NextLink href='/' legacyBehavior>
                 <Button size='large' variant='contained'>
                   Go to Home
                 </Button>
@@ -55,6 +55,6 @@ export default function PageNotFound() {
           </MotionContainer>
         </Container>
       </RootStyle>
-    </LogoOnlyLayout>
+    </LogoOnlyLayout>)
   );
 }
