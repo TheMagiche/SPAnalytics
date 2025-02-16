@@ -37,8 +37,9 @@ import { sentenceCase } from "change-case";
 import SearchNotFound from "src/components/SearchNotFound";
 import SupplierMenu from "src/views/dashboard/app/supplier/SupplierMenu";
 import { useSnackbar } from "notistack";
-import SupplierDetail from "src/views/dashboard/app/supplier/SupplierDetails";
+import SupplierCreate from "src/views/dashboard/app/supplier/SupplierCreate";
 import { Search } from "@mui/icons-material";
+import SupplierDetail from "src/views/dashboard/app/supplier/SupplierDetails";
 
 
 const TABLE_HEAD = [
@@ -70,6 +71,7 @@ export default function Suppliers() {
   const [openDetails, setOpenDetails] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [openCreate, setOpenCreate] = useState(false);
 
   const handleClick = (name: string) => {
     const selectedIndex = selected.indexOf(name);
@@ -136,6 +138,14 @@ export default function Suppliers() {
     });
   };
 
+  const handleOpenCreate = () => {
+    setOpenCreate(true);
+  };
+
+  const handleCloseCreate = () => {
+    setOpenCreate(false);
+  };
+
   return (
     <DashboardLayout>
       <Page title="Suppliers | SPAnalysis">
@@ -150,7 +160,7 @@ export default function Suppliers() {
             action={
               <Button
                 variant="contained"
-                onClick={() => {}}
+                onClick={handleOpenCreate}
                 startIcon={<Icon icon={plusFill} />}
               >
                 New Supplier
@@ -387,6 +397,10 @@ export default function Suppliers() {
           />
         </Container>
       </Page>
+      <SupplierCreate
+        openModal={openCreate}
+        handleClose={handleCloseCreate}
+      />
       <SupplierDetail
         openModal={openDetails}
         handleClose={handleCloseDetails}

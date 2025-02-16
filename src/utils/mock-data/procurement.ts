@@ -1,7 +1,7 @@
 import { sub } from 'date-fns';
 import { exportSuppliers } from './supplier';
 
-const PRODUCT_TITLES = [
+export const PRODUCT_TITLES = [
   'Organic Wheat',
   'Fresh Vegetables Assortment',
   'Dairy Products Bundle',

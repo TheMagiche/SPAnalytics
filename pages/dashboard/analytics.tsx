@@ -28,13 +28,14 @@ import React, { useState } from "react";
 import Label from "src/components/Label";
 import { sentenceCase } from "change-case";
 import SearchNotFound from "src/components/SearchNotFound";
-import { exportProcurements } from "src/utils/mock-data/procurement";
 import { fDate, fCurrency } from "src/utils/helper";
 import FilterDrawer from "src/views/dashboard/analysis/FilterDrawer";
 import filterFill from "@iconify/icons-eva/funnel-fill";
 import ProcurementMenu from "src/views/dashboard/analysis/ProcurementMenu";
 import ProcurementDetails from "src/views/dashboard/analysis/ProcurementDetails";
 import { Search } from "@mui/icons-material";
+import { useProcurement } from "src/hooks/useProcurement";
+import ProcurementCreate from "src/views/dashboard/analysis/ProcurementCreate";
 
 // ----------------------------------------------------------------------
 
@@ -57,6 +58,7 @@ const TABLE_HEAD = [
 export default function Analytics() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
+  const {procurements} = useProcurement();
   const [page, setPage] = useState<number>(0);
   const [selected, setSelected] = useState<string[]>([]);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
@@ -71,6 +73,7 @@ export default function Analytics() {
   const [selectedProcurement, setSelectedProcurement] = useState<any>(null);
   const [openDetails, setOpenDetails] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [openCreate, setOpenCreate] = useState(false);
 
   const handleClick = (name: string) => {
     const selectedIndex = selected.indexOf(name);
@@ -97,21 +100,21 @@ export default function Analytics() {
     setPage(0);
   };
 
-  const filteredProcurements = exportProcurements.filter((procurement) => {
+  const filteredProcurements = procurements.filter((procurements: any) => {
     const matchesRegion =
-      filterRegion === "all" ? true : procurement.region === filterRegion;
+      filterRegion === "all" ? true : procurements.region === filterRegion;
     const matchesProduct =
-      filterProduct === "all" ? true : procurement.title === filterProduct;
+      filterProduct === "all" ? true : procurements.title === filterProduct;
     const matchesAmount =
-      procurement.amountSpent >= amountRange[0] &&
-      procurement.amountSpent <= amountRange[1];
+      procurements.amountSpent >= amountRange[0] &&
+      procurements.amountSpent <= amountRange[1];
     const matchesStatus =
-      filterStatus === "all" ? true : procurement.status === filterStatus;
+      filterStatus === "all" ? true : procurements.status === filterStatus;
     const matchesSearch = searchQuery 
-      ? procurement.id.toLowerCase().includes(searchQuery.toLowerCase())
+      ? procurements.id.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
 
-    const procurementDate = new Date(procurement.date);
+    const procurementDate = new Date(procurements.date);
     const matchesStartDate = startDate ? procurementDate >= startDate : true;
     const matchesEndDate = endDate ? procurementDate <= endDate : true;
 
@@ -133,8 +136,8 @@ export default function Analytics() {
 
   const isDataNotFound = filteredProcurements.length === 0;
 
-  const handleOpenDetails = (procurement: any) => {
-    setSelectedProcurement(procurement);
+  const handleOpenDetails = (procurements: any) => {
+    setSelectedProcurement(procurements);
     setOpenDetails(true);
   };
 
@@ -143,13 +146,13 @@ export default function Analytics() {
     setSelectedProcurement(null);
   };
 
-  const handleDeleteProcurement = (procurement: any) => {
-    // Here you would typically make an API call to delete the procurement
+  const handleDeleteProcurement = (procurements: any) => {
+    // Here you would typically make an API call to delete the procurements
     const updatedProcurements = filteredProcurements.filter(
-      (p) => p.id !== procurement.id
+      (p: any) => p.id !== procurements.id
     );
     // Update your data source accordingly
-    console.log('Delete procurement:', procurement.id);
+    console.log('Delete procurements:', procurements.id);
   };
 
   return (
@@ -175,7 +178,7 @@ export default function Analytics() {
                 <Button
                   variant="contained"
                   startIcon={<Icon icon={plusFill} />}
-                  onClick={() => {}}
+                  onClick={() => setOpenCreate(true)}
                 >
                   New Procurement
                 </Button>
@@ -238,16 +241,16 @@ export default function Analytics() {
                         <Checkbox
                           indeterminate={
                             selected.length > 0 &&
-                            selected.length < exportProcurements.length
+                            selected.length < procurements.length
                           }
                           checked={
-                            exportProcurements.length > 0 &&
-                            selected.length === exportProcurements.length
+                            procurements.length > 0 &&
+                            selected.length === procurements.length
                           }
                           onChange={(event) => {
                             if (event.target.checked) {
-                              const newSelecteds = exportProcurements.map(
-                                (n) => n.id
+                              const newSelecteds = procurements.map(
+                                (n: any) => n.id
                               );
                               setSelected(newSelecteds);
                               return;
@@ -272,7 +275,7 @@ export default function Analytics() {
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
-                      .map((row) => {
+                      .map((row: any) => {
                         const {
                           id,
                           title,
@@ -391,6 +394,11 @@ export default function Analytics() {
         openModal={openDetails}
         handleClose={handleCloseDetails}
         procurement={selectedProcurement}
+      />
+
+      <ProcurementCreate
+        openModal={openCreate}
+        handleClose={() => setOpenCreate(false)}
       />
     </DashboardLayout>
   );

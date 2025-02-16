@@ -26,6 +26,7 @@ import LoadingScreen from "src/components/LoadingScreen";
 import ThemePrimaryColor from "src/components/ThemePrimaryColor";
 import { SupplierProvider } from "src/contexts/SupplierContext";
 import { GlobalSettingsProvider } from "src/contexts/GlobalSettingsContext";
+import { ProcurementProvider } from "src/contexts/ProcurementContext";
 
 // ----------------------------------------------------------------------
 
@@ -43,28 +44,30 @@ export default function MyApp(props: MyAppProps) {
       <CollapseDrawerProvider>
         <GlobalSettingsProvider>
           <SupplierProvider>
-            <CacheProvider value={emotionCache}>
-              <Head>
-                <meta
-                  name="viewport"
-                  content="initial-scale=1, width=device-width"
-                />
-              </Head>
+            <ProcurementProvider>
+              <CacheProvider value={emotionCache}>
+                <Head>
+                  <meta
+                    name="viewport"
+                    content="initial-scale=1, width=device-width"
+                  />
+                </Head>
 
-              <ThemeConfig>
-                <ThemePrimaryColor>
-                  <RtlLayout>
-                    <NoSsr>
-                      <Settings />
-                    </NoSsr>
-                    <GlobalStyles />
-                    <ProgressBar />
-                    <LoadingScreen />
-                    <Component {...pageProps} />
-                  </RtlLayout>
-                </ThemePrimaryColor>
-              </ThemeConfig>
-            </CacheProvider>
+                <ThemeConfig>
+                  <ThemePrimaryColor>
+                    <RtlLayout>
+                      <NoSsr>
+                        <Settings />
+                      </NoSsr>
+                      <GlobalStyles />
+                      <ProgressBar />
+                      <LoadingScreen />
+                      <Component {...pageProps} />
+                    </RtlLayout>
+                  </ThemePrimaryColor>
+                </ThemeConfig>
+              </CacheProvider>
+            </ProcurementProvider>
           </SupplierProvider>
         </GlobalSettingsProvider>
       </CollapseDrawerProvider>
