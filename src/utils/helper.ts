@@ -1,3 +1,6 @@
+import { replace } from 'lodash';
+import numeral from 'numeral';
+
 /**
  * Format a date string to a readable format
  * @param date - Date string or Date object
@@ -68,3 +71,7 @@ export const fPercent = (number: number): string => {
     return 'Invalid Percentage';
   }
 };
+
+export function fShortenNumber(number: string | number) {
+  return replace(numeral(number).format('0.00a'), '.00', '');
+}
