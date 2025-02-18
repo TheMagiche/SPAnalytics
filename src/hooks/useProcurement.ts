@@ -79,6 +79,51 @@ export const useProcurement = () => {
     return totalAverage / averageCarbonEmissionsByRegion.length;
   }, [averageCarbonEmissionsByRegion]);
 
+  const averageCarbonFootprintByProduct = useMemo(() => {
+    const footprintByProduct: { [key: string]: { totalFootprint: number; count: number } } = {};
+
+    procurements.forEach((procurement: any) => {
+      const title = procurement.title;
+      const footprint = procurement.environmentalImpact.carbonFootprint;
+
+      if (!footprintByProduct[title]) {
+        footprintByProduct[title] = { totalFootprint: 0, count: 0 };
+      }
+      footprintByProduct[title].totalFootprint += footprint;
+      footprintByProduct[title].count += 1;
+    });
+
+    return Object.entries(footprintByProduct)
+      .map(([title, { totalFootprint, count }]) => ({
+        title,
+        averageFootprint: Number((totalFootprint / count).toFixed(2)),
+      }))
+      .sort((a, b) => b.averageFootprint - a.averageFootprint);
+  }, [procurements]);
+
+  const sustainabilityScoresByMonth = useMemo(() => {
+    const scoresByMonth: { [key: string]: { totalScore: number; count: number } } = {};
+
+    procurements.forEach((procurement: any) => {
+      const date = new Date(procurement.date);
+      const monthKey = date.toISOString().substring(0, 7);
+      const score = procurement.environmentalImpact.sustainabilityScore;
+
+      if (!scoresByMonth[monthKey]) {
+        scoresByMonth[monthKey] = { totalScore: 0, count: 0 };
+      }
+      scoresByMonth[monthKey].totalScore += score;
+      scoresByMonth[monthKey].count += 1;
+    });
+
+    return Object.entries(scoresByMonth)
+      .map(([monthKey, { totalScore, count }]) => ({
+        month: monthKey,
+        averageScore: Number((totalScore / count).toFixed(2)),
+      }))
+      .sort((a, b) => a.month.localeCompare(b.month));
+  }, [procurements]);
+
   return {
     procurements,
     setProcurements,
@@ -90,5 +135,7 @@ export const useProcurement = () => {
     lowestRegion,
     totalCarbonEmissions,
     totalAverageCarbonEmissions,
+    averageCarbonFootprintByProduct,
+    sustainabilityScoresByMonth,
   };
 };

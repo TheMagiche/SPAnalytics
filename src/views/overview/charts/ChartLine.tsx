@@ -8,7 +8,7 @@ const ReactApexChart = dynamic(() => import("react-apexcharts"), {
 
 type ChartLineProps = {
   CHART_DATA: Array<any>; //  CHART_DATA = [{ name: 'Desktops', data: [10, 41, 35, 51, 49, 62, 69, 91, 148] }];
-  categories: Array<string>; // ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+  categories: Array<string>; // [ '01/01/2003','02/01/2003','03/01/2003','04/01/2003','05/01/2003','06/01/2003','07/01/2003','08/01/2003','09/01/2003','10/01/2003','11/01/2003']
   height?: number;
 };
 
@@ -18,9 +18,11 @@ export default function ChartLine({
   height = 320,
 }: ChartLineProps) {
   const chartOptions = merge(BaseOptionChart(), {
+    labels: categories,
     xaxis: {
-      categories: categories,
+      type: 'datetime'
     },
+    yaxis: { title: { text: 'Sustainability Score' }, min: 0 },
     tooltip: { x: { show: false }, marker: { show: false } },
   });
 

@@ -11,7 +11,7 @@ const ROOTS_DASHBOARD = "/dashboard";
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   general: {
-    dashboard: path(ROOTS_DASHBOARD, "/dashboard"),
+    dashboard: path(ROOTS_DASHBOARD, "/overview"),
     revenue: path(ROOTS_DASHBOARD, "/revenue"),
     analytics: path(ROOTS_DASHBOARD, "/analytics"),
   },

@@ -11,6 +11,8 @@ import AnalyticsPiechart from "src/views/overview/components/AnalyticsPieChart";
 import { useProcurement } from "src/hooks/useProcurement";
 import DisplayWidget from "src/views/overview/widgets/DisplayWidget";
 import { useState } from "react";
+import AnalyticsBarChart from "src/views/overview/components/AnalyticsBarChart";
+import AnalyticsLineChart from "src/views/overview/components/AnalyticsLineChart";
 
 export default function Dashboard() {
   const { themeStretch } = useSettings();
@@ -20,11 +22,13 @@ export default function Dashboard() {
     averageCarbonEmissionsByRegion,
     highestRegion,
     lowestRegion,
+    averageCarbonFootprintByProduct,
+    sustainabilityScoresByMonth,
   } = useProcurement();
 
   return (
     <DashboardLayout>
-      <Page title="Dashboard | SPAnalytics">
+      <Page title="Overview | SPAnalytics">
         <Container maxWidth={themeStretch ? false : "xl"}>
           <Typography variant="h3" component="h1" paragraph>
             Welcome, Admin
@@ -80,7 +84,7 @@ export default function Dashboard() {
             <Grid item xs={12} md={8}>
               <NoSsr>
                 <AnalyticsPiechart
-                  title={"CO₂ by region"}
+                  title={"CO₂ emission by region"}
                   chartData={averageCarbonEmissionsByRegion.map(
                     (data) => data.averageEmissions
                   )}
@@ -97,9 +101,9 @@ export default function Dashboard() {
                   <DisplayWidget
                     title={`Highest ${highestRegion?.region}`}
                     TOTAL={highestRegion?.averageEmissions || 0}
-                    CHART_DATA={[(highestRegion?.averageEmissions || 0) / 100]}
                     icon={"eva:alert-triangle-fill"}
                     color={"common.white"}
+                    bgColor="error"
                   />
                 )}
               </NoSsr>
@@ -109,11 +113,68 @@ export default function Dashboard() {
                   <DisplayWidget
                     title={`Lowest ${lowestRegion?.region}`}
                     TOTAL={lowestRegion?.averageEmissions || 0}
-                    CHART_DATA={[(lowestRegion?.averageEmissions || 0) / 100]}
                     icon={"eva:activity-outline"}
                     color={"common.white"}
+                    bgColor="success"
                   />
                 )}
+              </NoSsr>
+            </Grid>
+          </Grid>}
+
+          {category === 'footprint' && <Grid container my={2} spacing={2}>
+            <Grid item xs={12} md={8}>
+              <NoSsr>
+                <AnalyticsBarChart
+                  title={"CO₂ footprint by produce"}
+                  CHART_DATA={[{
+                    name: 'Carbon Footprint',
+                    data: averageCarbonFootprintByProduct.map(item => item.averageFootprint)
+                  }]}
+                  categories={averageCarbonFootprintByProduct.map(item => item.title)}
+                  height={600}
+                />
+              </NoSsr>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <NoSsr>
+                {averageCarbonFootprintByProduct.length > 0 && (
+                  <DisplayWidget
+                    title={`Highest Footprint: ${averageCarbonFootprintByProduct[0].title}`}
+                    TOTAL={averageCarbonFootprintByProduct[0].averageFootprint}
+                    icon={"eva:alert-triangle-fill"}
+                    color={"common.white"}
+                    bgColor="error"
+                  />
+                )}
+              </NoSsr>
+              <br />
+              <NoSsr>
+                {averageCarbonFootprintByProduct.length > 0 && (
+                  <DisplayWidget
+                    title={`Lowest Footprint: ${averageCarbonFootprintByProduct[averageCarbonFootprintByProduct.length - 1].title}`}
+                    TOTAL={averageCarbonFootprintByProduct[averageCarbonFootprintByProduct.length - 1].averageFootprint}
+                    icon={"eva:activity-outline"}
+                    color={"common.white"}
+                    bgColor="success"
+                  />
+                )}
+              </NoSsr>
+            </Grid>
+          </Grid>}
+
+          {category === 'sustainability' && <Grid container my={2} spacing={2}>
+            <Grid item xs={12} md={12}>
+              <NoSsr>
+                <AnalyticsLineChart
+                  title={"Sustainability Score Over Time"}
+                  CHART_DATA={[{
+                    name: 'Sustainability Score',
+                    data: sustainabilityScoresByMonth.map(item => item.averageScore.toFixed(2))
+                  }]}
+                  categories={sustainabilityScoresByMonth.map(item => item.month)}
+                  height={500}
+                />
               </NoSsr>
             </Grid>
           </Grid>}
@@ -125,6 +186,7 @@ export default function Dashboard() {
               </NoSsr>
             </Grid>
           </Grid>}
+
         </Container>
       </Page>
     </DashboardLayout>
