@@ -133,10 +133,6 @@ export default function LandingHero() {
             >
               <motion.img
                 variants={varFadeInRight}
-                src="/static/home/ic_figma.svg"
-              />
-              <motion.img
-                variants={varFadeInRight}
                 src="/static/home/ic_material.svg"
               />
               <motion.img

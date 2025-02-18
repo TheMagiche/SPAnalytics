@@ -1,11 +1,9 @@
 import { Icon } from '@iconify/react';
 import { useRef, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
-import personFill from '@iconify/icons-eva/person-fill';
-import settings2Fill from '@iconify/icons-eva/settings-2-fill';
-// next
+// import personFill from '@iconify/icons-eva/person-fill';
+// import settings2Fill from '@iconify/icons-eva/settings-2-fill';
 import NextLink from 'next/link';
-// material
 import { alpha } from '@mui/material/styles';
 import {
   Box,
@@ -15,19 +13,15 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material';
-// components
 import MenuPopover from '../../components/MenuPopover';
 import { MIconButton } from '../../components/@material-extend';
-
-// ----------------------------------------------------------------------
+import router from 'next/router';
 
 const MENU_OPTIONS = [
   { label: 'Home', icon: homeFill, linkTo: '/' },
   // { label: 'Profile', icon: personFill, linkTo: '#' },
   // { label: 'Settings', icon: settings2Fill, linkTo: '#' },
 ];
-
-// ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const anchorRef = useRef(null);
@@ -106,7 +100,7 @@ export default function AccountPopover() {
       ))}
 
       <Box sx={{ p: 2, pt: 1.5 }}>
-        <Button fullWidth color='inherit' variant='outlined'>
+        <Button onClick={() => router.push('/')} fullWidth color='inherit' variant='outlined'>
           Logout
         </Button>
       </Box>
