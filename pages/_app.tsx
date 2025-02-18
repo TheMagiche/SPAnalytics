@@ -1,4 +1,6 @@
 import "simplebar/src/simplebar.css";
+import "react-toastify/dist/ReactToastify.css";
+
 import Head from "next/head";
 import { AppProps } from "next/app";
 import { CacheProvider, EmotionCache } from "@emotion/react";
@@ -16,8 +18,8 @@ import ThemePrimaryColor from "src/components/ThemePrimaryColor";
 import { SupplierProvider } from "src/contexts/SupplierContext";
 import { GlobalSettingsProvider } from "src/contexts/GlobalSettingsContext";
 import { ProcurementProvider } from "src/contexts/ProcurementContext";
-
-// ----------------------------------------------------------------------
+import { ToastContainer } from "react-toastify";
+import { useTheme } from '@mui/material/styles';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -26,6 +28,7 @@ interface MyAppProps extends AppProps {
 }
 
 export default function MyApp(props: MyAppProps) {
+  const theme = useTheme();
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   return (
@@ -51,6 +54,18 @@ export default function MyApp(props: MyAppProps) {
                       <GlobalStyles />
                       <ProgressBar />
                       <LoadingScreen />
+                      <ToastContainer
+                        position="top-right"
+                        autoClose={2000}
+                        hideProgressBar={false}
+                        newestOnTop={true}
+                        closeOnClick
+                        rtl={theme.direction === "rtl"}
+                        pauseOnFocusLoss
+                        draggable={false}
+                        pauseOnHover
+                        theme={theme.palette.mode === "dark" ? "dark" : "light"}
+                      />
                       <Component {...pageProps} />
                     </RtlLayout>
                   </ThemePrimaryColor>

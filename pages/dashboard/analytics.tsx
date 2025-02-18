@@ -36,8 +36,8 @@ import ProcurementDetails from "src/views/dashboard/analysis/ProcurementDetails"
 import { Search } from "@mui/icons-material";
 import { useProcurement } from "src/hooks/useProcurement";
 import ProcurementCreate from "src/views/dashboard/analysis/ProcurementCreate";
+import { toast } from "react-toastify";
 
-// ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: "id", label: "ID", alignRight: false },
@@ -53,12 +53,11 @@ const TABLE_HEAD = [
   { id: "status", label: "Status", alignRight: false },
 ];
 
-// ----------------------------------------------------------------------
 
 export default function Analytics() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const {procurements} = useProcurement();
+  const {procurements, setProcurements} = useProcurement();
   const [page, setPage] = useState<number>(0);
   const [selected, setSelected] = useState<string[]>([]);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
@@ -146,13 +145,9 @@ export default function Analytics() {
     setSelectedProcurement(null);
   };
 
-  const handleDeleteProcurement = (procurements: any) => {
-    // Here you would typically make an API call to delete the procurements
-    const updatedProcurements = filteredProcurements.filter(
-      (p: any) => p.id !== procurements.id
-    );
-    // Update your data source accordingly
-    console.log('Delete procurements:', procurements.id);
+  const handleDeleteProcurement = (selectedProcurement: any) => {
+    setProcurements(procurements.filter((p: any) => p.id !== selectedProcurement.id));
+    toast.error(`Procurement deleted successfully`);
   };
 
   return (
@@ -351,7 +346,7 @@ export default function Analytics() {
                             <TableCell align="right">
                               <ProcurementMenu
                                 procurement={row}
-                                onDelete={handleDeleteProcurement}
+                                onDelete={() => handleDeleteProcurement(row)}
                                 onOpen={handleOpenDetails}
                               />
                             </TableCell>

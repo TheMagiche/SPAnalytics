@@ -15,8 +15,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useSupplier } from "src/hooks/useSupplier";
-import { useSnackbar } from "notistack";
 import { country } from "src/utils/mock-data/address";
+import { toast } from "react-toastify";
 
 interface SupplierCreateProps {
   openModal: boolean;
@@ -41,7 +41,6 @@ const SupplierCreate: React.FC<SupplierCreateProps> = ({
   handleClose,
 }) => {
   const { setSuppliers } = useSupplier();
-  const { enqueueSnackbar } = useSnackbar();
   const [formData, setFormData] = React.useState({
     companyName: "",
     contactPerson: {
@@ -78,13 +77,11 @@ const SupplierCreate: React.FC<SupplierCreateProps> = ({
     const newErrors: FormErrors = {};
     let isValid = true;
 
-    // Company Name validation
     if (!formData.companyName.trim()) {
       newErrors.companyName = 'Company name is required';
       isValid = false;
     }
 
-    // Contact Person validations
     const contactErrors: FormErrors['contactPerson'] = {};
     
     if (!formData.contactPerson.name.trim()) {
@@ -109,13 +106,11 @@ const SupplierCreate: React.FC<SupplierCreateProps> = ({
       newErrors.contactPerson = contactErrors;
     }
 
-    // Country validation
     if (!formData.country) {
       newErrors.country = 'Country is required';
       isValid = false;
     }
 
-    // Rating validation
     if (formData.rating === 0) {
       newErrors.rating = 'Please provide a rating';
       isValid = false;
@@ -129,22 +124,19 @@ const SupplierCreate: React.FC<SupplierCreateProps> = ({
     event.preventDefault();
     
     if (!validateForm()) {
-      enqueueSnackbar("Please fill in all required fields correctly", { variant: "error" });
       return;
     }
 
-    // Create new supplier object
     const newSupplier = {
       id: `e99f09a7-dd88-49d5-b1c8-1daf80c2d7b${Math.random() * 1000}`,
       ...formData,
     };
 
-    // Update suppliers list
     setSuppliers((prev: any[]) => [...prev, newSupplier]);
+    toast.success(`Supplier created successfully`);
     
-    enqueueSnackbar("Supplier created successfully", { variant: "success" });
     handleClose();
-    // Reset form and errors
+
     setFormData({
       companyName: "",
       contactPerson: {

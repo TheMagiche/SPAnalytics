@@ -9,12 +9,11 @@ import {
   MenuItem,
   Grid,
   Stack,
-  Typography,
 } from "@mui/material";
 import { useProcurement } from "src/hooks/useProcurement";
 import { exportSuppliers } from "src/utils/mock-data/supplier";
 import { PRODUCT_TITLES } from "src/utils/mock-data/procurement";
-import { useSnackbar } from "notistack";
+import { toast } from "react-toastify";
 
 interface ProcurementCreateProps {
   openModal: boolean;
@@ -64,7 +63,6 @@ const ProcurementCreate: React.FC<ProcurementCreateProps> = ({
   handleClose,
 }) => {
   const { setProcurements, procurements } = useProcurement();
-  const { enqueueSnackbar } = useSnackbar();
   const [values, setValues] = useState<FormValues>(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -107,25 +105,21 @@ const ProcurementCreate: React.FC<ProcurementCreateProps> = ({
     const newErrors: FormErrors = {};
     let isValid = true;
 
-    // Product validation
     if (!values.title) {
       newErrors.title = 'Product is required';
       isValid = false;
     }
 
-    // Supplier validation
     if (!values.supplierId) {
       newErrors.supplierId = 'Supplier is required';
       isValid = false;
     }
 
-    // Sub Region validation
     if (!values.subRegion) {
       newErrors.subRegion = 'Sub Region is required';
       isValid = false;
     }
 
-    // Amount validation
     if (!values.amountSpent) {
       newErrors.amountSpent = 'Amount is required';
       isValid = false;
@@ -134,7 +128,6 @@ const ProcurementCreate: React.FC<ProcurementCreateProps> = ({
       isValid = false;
     }
 
-    // Quantity validation
     if (!values.quantity) {
       newErrors.quantity = 'Quantity is required';
       isValid = false;
@@ -143,7 +136,6 @@ const ProcurementCreate: React.FC<ProcurementCreateProps> = ({
       isValid = false;
     }
 
-    // Environmental Impact validation
     const environmentalErrors: FormErrors['environmentalImpact'] = {};
 
     if (!values.environmentalImpact.carbonEmissions) {
@@ -177,7 +169,6 @@ const ProcurementCreate: React.FC<ProcurementCreateProps> = ({
     event.preventDefault();
     
     if (!validateForm()) {
-      enqueueSnackbar("Please fill in all required fields correctly", { variant: "error" });
       return;
     }
 
@@ -198,7 +189,7 @@ const ProcurementCreate: React.FC<ProcurementCreateProps> = ({
     };
 
     setProcurements([newProcurement, ...procurements]);
-    enqueueSnackbar("Procurement created successfully", { variant: "success" });
+    toast.success(`Procurement created successfully`);
     setValues(initialValues);
     handleClose();
   };

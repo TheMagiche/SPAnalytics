@@ -36,10 +36,10 @@ import { useSupplier } from "src/hooks/useSupplier";
 import { sentenceCase } from "change-case";
 import SearchNotFound from "src/components/SearchNotFound";
 import SupplierMenu from "src/views/dashboard/app/supplier/SupplierMenu";
-import { useSnackbar } from "notistack";
 import SupplierCreate from "src/views/dashboard/app/supplier/SupplierCreate";
 import { Search } from "@mui/icons-material";
 import SupplierDetail from "src/views/dashboard/app/supplier/SupplierDetails";
+import { toast } from "react-toastify";
 
 
 const TABLE_HEAD = [
@@ -59,7 +59,7 @@ const STATUS_OPTIONS = ["active", "inactive"];
 export default function Suppliers() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const { suppliers } = useSupplier();
+  const { suppliers, setSuppliers } = useSupplier();
   const [page, setPage] = useState<number>(0);
   const [selected, setSelected] = useState<string[]>([]);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
@@ -69,7 +69,6 @@ export default function Suppliers() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [selectedSupplier, setSelectedSupplier] = useState<any>(null);
   const [openDetails, setOpenDetails] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [openCreate, setOpenCreate] = useState(false);
 
@@ -132,10 +131,9 @@ export default function Suppliers() {
     setSelectedSupplier(null);
   };
 
-  const handleDeleteSupplier = (supplier: any) => {
-    enqueueSnackbar(`Supplier ${supplier.companyName} deleted successfully`, {
-      variant: "success",
-    });
+  const handleDeleteSupplier = (selectedSupplier: any) => {
+    setSuppliers(suppliers.filter((s: any) => s.id !== selectedSupplier.id));
+    toast.error(`Supplier deleted successfully`);
   };
 
   const handleOpenCreate = () => {
