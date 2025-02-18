@@ -75,7 +75,8 @@ To get started with SPAnalytics, follow these steps:
      - Apply various filters:
      - Filtered view updates dashboard
 
-    flowchart TD
+```mermaid
+flowchart TD
     A[User Arrives] --> B{Has Account?}
     B -->|No| C[Sign Up]
     B -->|Yes| D[Login]
@@ -127,6 +128,7 @@ To get started with SPAnalytics, follow these steps:
     style F fill:#bbf,stroke:#333,stroke-width:2px
     style I fill:#bfb,stroke:#333,stroke-width:2px
     style H fill:#fbf,stroke:#333,stroke-width:2px
+```
 
 ## License
 
@@ -134,4 +136,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- Thanks to the contributors and the community for their support.
+- Thanks to the minimals.ui and the Terrascope for their support.
