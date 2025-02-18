@@ -20,6 +20,7 @@ export default function DialogAnimate({
   ...other
 }: DialogAnimateProps) {
   return (
+    // @ts-ignore
     <AnimatePresence>
       {open && (
         <Dialog

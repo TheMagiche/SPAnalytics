@@ -25,6 +25,7 @@ import { MenuProps, MenuItemProps } from './MainNavbar';
 
 // ----------------------------------------------------------------------
 
+// @ts-ignore
 interface RouterLinkProps extends LinkProps {
   component?: ReactNode;
   to?: string;

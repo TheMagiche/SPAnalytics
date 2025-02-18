@@ -35,6 +35,7 @@ const PADDING = 2.5;
 
 type StyleProps = LinkProps & ListItemButtonProps;
 
+// @ts-ignore
 interface ListItemStyleProps extends StyleProps {
   component?: ReactNode;
   to?: string;
